@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.pdg.androidbasics.model.Item;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -21,7 +22,9 @@ public class MainActivity extends Activity {
     ListView listView;
     RequestQueue requestQueue;
 
-    String TAG = "TABLETRY";
+    String TAG = "ANDROIDBASICS";
+
+    ArrayList<Item> values;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,36 +35,47 @@ public class MainActivity extends Activity {
 
         requestQueue = Volley.newRequestQueue(this);
 
-        ArrayList<String> values = new ArrayList<String>();
-//        values.add("a"); values.add("b"); values.add("c"); values.add("d"); values.add("e");
-//        values.add("f"); values.add("g"); values.add("h"); values.add("i"); values.add("j");
+        fetchItemsFromURL();
 
-        fetchItemsFromURL(values);
-
-        ListAdapter adapter = new com.pdg.tabletry.viewcontroller.ListAdapter(this, values);
+        ListAdapter adapter = new com.pdg.androidbasics.viewcontroller.ListAdapter(this, values);
         listView.setAdapter(adapter);
     }
 
-    private void fetchItemsFromURL(final ArrayList<String> values) {
+    private void fetchItemsFromURL() {
         Log.i(TAG, "Fetching from URL");
+
+        values = new ArrayList<Item>();
+
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://my.api.mockaroo.com/items.json?key=f2324050",
                 null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.i(TAG, "onResponse: Response received.");
-                for(int i=0; i<response.length(); i++) {
-                    try {
-                        values.add(response.getJSONObject(i).getString("name") + response.getJSONObject(i).getString("subtitle"));
-                    }catch (JSONException jsonError){
-                        Log.e(TAG, "Error parsing JSON: "+jsonError.getMessage());
-                        jsonError.printStackTrace();
+
+                Log.i(TAG, "onResponse: Response received: " + response.length());
+//                    Log.i(TAG, "Response received: " + response.toString(4));
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                        Item mItem = new Item(response.getJSONObject(i).getInt("id"),
+                                response.getJSONObject(i).getString("name"),
+                                response.getJSONObject(i).getString("subtitle"),
+                                response.getJSONObject(i).getString("image"),
+                                (float) response.getJSONObject(i).getDouble("price"),
+                                response.getJSONObject(i).getString("description"));
+
+                        values.add(mItem);
+//                        Log.i(TAG, i+":"+response.getJSONObject(i).getString("name") + " " + response.getJSONObject(i).getString("subtitle"));
                     }
+                } catch (JSONException jsonError) {
+                    Log.e(TAG, "Error parsing JSON: " + jsonError.getMessage());
+                    jsonError.printStackTrace();
                 }
+                Log.d(TAG, "onResponse: array size:"+values.size());
+                ((com.pdg.androidbasics.viewcontroller.ListAdapter)listView.getAdapter()).notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", "Error retrieving JSON from URL: "+error.getMessage());
+                Log.e("TAG", "Error retrieving JSON from URL: " + error.getMessage());
                 error.printStackTrace();
             }
         });
@@ -69,6 +83,5 @@ public class MainActivity extends Activity {
         requestQueue.add(jsonArrayRequest);
         Log.i(TAG, "Request sent.");
     }
-
 
 }

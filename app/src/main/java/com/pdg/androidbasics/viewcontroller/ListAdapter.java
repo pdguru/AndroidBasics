@@ -7,15 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.pdg.androidbasics.R;
+import com.pdg.androidbasics.model.Item;
 
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
 
     private final Context context;
-    private final ArrayList<String> values;
+    private final ArrayList<Item> values;
 
-    public ListAdapter(Context context, ArrayList<String> values){
+    public ListAdapter(Context context, ArrayList<Item> values){
 
         this.context = context;
         this.values = values;
@@ -48,7 +49,13 @@ public class ListAdapter extends BaseAdapter {
         View rowView = inflater.inflate(R.layout.list_item_row, parent,false);
 
         TextView nameTV = rowView.findViewById(R.id.rowNameLabel);
-        nameTV.setText(values.get(position));
+        nameTV.setText(values.get(position).getName());
+
+        TextView subtitleTV = rowView.findViewById(R.id.rowSubtitleLabel);
+        subtitleTV.setText(values.get(position).getSubtitle());
+
+        TextView priceTV = rowView.findViewById(R.id.rowPriceLabel);
+        priceTV.setText(""+values.get(position).getPrice());
 
         return rowView;
     }

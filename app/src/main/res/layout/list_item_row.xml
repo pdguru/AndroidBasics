@@ -16,18 +16,21 @@
         <TextView android:id="@+id/rowNameLabel"
                   android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="Item name"
-                  android:layout_margin="4dp"
-                  android:padding="4dp"/>
+                  android:layout_marginTop="4dp"
+                  android:layout_marginLeft="4dp"
+                  android:padding="2dp"/>
         <TextView android:id="@+id/rowSubtitleLabel"
                   android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="Item Subtitle"
-                  android:layout_margin="4dp"
-                  android:padding="4dp"/>
+                  android:layout_marginTop="2dp"
+                  android:layout_marginLeft="4dp"
+                  android:padding="2dp"/>
         <TextView android:id="@+id/rowPriceLabel"
                   android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="Item Price"
-                  android:layout_margin="4dp"
-                  android:padding="4dp"/>
+                  android:layout_marginTop="2dp"
+                  android:layout_marginLeft="4dp"
+                  android:padding="2dp"/>
     </LinearLayout>
 
 </LinearLayout>
